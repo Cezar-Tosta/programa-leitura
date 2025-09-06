@@ -419,8 +419,8 @@ video {
     position: fixed;
     bottom: 30px;
     right: 30px;
-    background: linear-gradient(45deg, #667eea, #764ba2);
-    color: white;
+    background: linear-gradient(145deg, #546e7a, #455a64);
+    color: #ecf0f1;
     border: none;
     border-radius: 50%;
     width: 50px;
@@ -428,13 +428,16 @@ video {
     font-size: 1.2rem;
     cursor: pointer;
     transition: all 0.3s ease;
-    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.4),
+                inset 0 1px 0 rgba(255, 255, 255, 0.1);
     display: none;
 }
 
 .back-to-top:hover {
     transform: translateY(-3px);
-    box-shadow: 0 8px 25px rgba(0,0,0,0.3);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.5),
+                inset 0 1px 0 rgba(255, 255, 255, 0.2);
+    background: linear-gradient(145deg, #607d8b, #546e7a);
 }
 
 .back-to-top.visible {
