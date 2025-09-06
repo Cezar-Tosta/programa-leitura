@@ -1,0 +1,896 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Resumo do Livro - 10 Capítulos</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            text-align: center;
+            padding: 60px 0;
+            color: white;
+            margin-bottom: 40px;
+        }
+
+        .header h1 {
+            font-size: 3.5rem;
+            font-weight: 700;
+            margin-bottom: 15px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .header p {
+            font-size: 1.3rem;
+            opacity: 0.9;
+            font-weight: 300;
+        }
+
+        .chapters-nav {
+            background: rgba(255,255,255,0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 40px;
+            border: 1px solid rgba(255,255,255,0.2);
+        }
+
+        .nav-title {
+            color: white;
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+            text-align: center;
+            font-weight: 600;
+        }
+
+        .nav-buttons {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+        }
+
+        .nav-btn {
+            background: rgba(255,255,255,0.2);
+            border: 2px solid rgba(255,255,255,0.3);
+            color: white;
+            padding: 12px 20px;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 1rem;
+            font-weight: 500;
+        }
+
+        .nav-btn:hover {
+            background: rgba(255,255,255,0.3);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        .nav-btn.active {
+            background: linear-gradient(45deg, #ff6b6b, #feca57);
+            border-color: transparent;
+            box-shadow: 0 5px 15px rgba(255,107,107,0.4);
+        }
+
+        .chapter {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            margin-bottom: 30px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+            border: 1px solid rgba(255,255,255,0.3);
+            display: none;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .chapter.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .chapter-header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding-bottom: 20px;
+            border-bottom: 3px solid #f1f1f1;
+        }
+
+        .chapter-number {
+            font-size: 1.2rem;
+            color: #667eea;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .chapter-title {
+            font-size: 2.5rem;
+            color: #333;
+            margin: 10px 0;
+            font-weight: 700;
+        }
+
+        .content-sections {
+            display: grid;
+            gap: 30px;
+        }
+
+        .content-section {
+            background: #f8f9ff;
+            border-radius: 15px;
+            padding: 30px;
+            border-left: 5px solid #667eea;
+        }
+
+        .section-title {
+            display: flex;
+            align-items: center;
+            font-size: 1.4rem;
+            color: #333;
+            margin-bottom: 20px;
+            font-weight: 600;
+        }
+
+        .section-icon {
+            width: 30px;
+            height: 30px;
+            margin-right: 15px;
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.2rem;
+        }
+
+        .summary-text {
+            color: #555;
+            font-size: 1.1rem;
+            line-height: 1.8;
+            text-align: justify;
+        }
+
+        .placeholder-text {
+            color: #999;
+            font-style: italic;
+            background: #e9ecef;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+        }
+
+        .media-container {
+            text-align: center;
+        }
+
+        audio, video {
+            width: 100%;
+            max-width: 600px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        audio {
+            height: 54px;
+        }
+
+        video {
+            max-height: 400px;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 6px;
+            background: rgba(255,255,255,0.3);
+            border-radius: 3px;
+            margin: 30px 0;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #ff6b6b, #feca57);
+            border-radius: 3px;
+            transition: width 0.3s ease;
+        }
+
+        .progress-text {
+            color: white;
+            text-align: center;
+            margin-top: 10px;
+            font-size: 0.9rem;
+            opacity: 0.8;
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2.5rem;
+            }
+            
+            .header p {
+                font-size: 1.1rem;
+            }
+            
+            .chapter {
+                padding: 25px;
+                margin-bottom: 20px;
+            }
+            
+            .chapter-title {
+                font-size: 2rem;
+            }
+            
+            .nav-buttons {
+                grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            }
+        }
+
+        .back-to-top {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            font-size: 1.2rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            display: none;
+        }
+
+        .back-to-top:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.3);
+        }
+
+        .back-to-top.visible {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <h1>📚 As Grandes Estratégias</h1>
+            <p>Resumo completo em 10 capítulos com áudio e vídeo</p>
+        </div>
+
+        <!-- Navigation -->
+        <div class="chapters-nav">
+            <div class="nav-title">Navegação por Capítulos</div>
+            <div class="nav-buttons">
+                <button class="nav-btn active" data-chapter="1">Capítulo 1</button>
+                <button class="nav-btn" data-chapter="2">Capítulo 2</button>
+                <button class="nav-btn" data-chapter="3">Capítulo 3</button>
+                <button class="nav-btn" data-chapter="4">Capítulo 4</button>
+                <button class="nav-btn" data-chapter="5">Capítulo 5</button>
+                <button class="nav-btn" data-chapter="6">Capítulo 6</button>
+                <button class="nav-btn" data-chapter="7">Capítulo 7</button>
+                <button class="nav-btn" data-chapter="8">Capítulo 8</button>
+                <button class="nav-btn" data-chapter="9">Capítulo 9</button>
+                <button class="nav-btn" data-chapter="10">Capítulo 10</button>
+            </div>
+            
+            <!-- Progress Bar -->
+            <div class="progress-bar">
+                <div class="progress-fill" id="progressFill"></div>
+            </div>
+            <div class="progress-text" id="progressText">Capítulo 1 de 10</div>
+        </div>
+
+        <!-- Chapters -->
+        <div id="chaptersContainer">
+            <!-- Chapter 1 -->
+            <div class="chapter active" id="chapter1">
+                <div class="chapter-header">
+                    <div class="chapter-number">Capítulo 1</div>
+                    <h2 class="chapter-title">Atravessando o Estreito de Helesponto</h2>
+                </div>
+                
+                <div class="content-sections">
+                    <!-- Summary Section -->
+                    <div class="content-section">
+                        <h3 class="section-title">
+                            <span class="section-icon">📝</span>
+                            Resumo do Capítulo
+                        </h3>
+                        <div class="summary-text">
+                            <div class="placeholder-text">
+                                Aqui você adicionará o resumo do Capítulo 1. Substitua este texto pelo conteúdo real do capítulo.
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Audio Section -->
+                    <div class="content-section">
+                        <h3 class="section-title">
+                            <span class="section-icon">🎵</span>
+                            Áudio do Capítulo
+                        </h3>
+                        <div class="media-container">
+                            <audio controls>
+                                <source src="mídias/capitulo1.mp3" type="audio/mpeg">
+                                <source src="mídias/capitulo1.m4a" type="audio/ogg">
+                                Seu navegador não suporta o elemento de áudio.
+                            </audio>
+                        </div>
+                    </div>
+
+                    <!-- Video Section -->
+                    <div class="content-section">
+                        <h3 class="section-title">
+                            <span class="section-icon">🎬</span>
+                            Vídeo do Capítulo
+                        </h3>
+                        <div class="media-container">
+                            <video controls>
+                                <source src="mídias/capitulo1.mp4" type="video/mp4">
+                                <source src="mídias/capitulo1.webm" type="video/webm">
+                                Seu navegador não suporta o elemento de vídeo.
+                            </video>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Chapters 2-10 (Template structure) -->
+            <div class="chapter" id="chapter2">
+                <div class="chapter-header">
+                    <div class="chapter-number">Capítulo 2</div>
+                    <h2 class="chapter-title">Título do Capítulo 2</h2>
+                </div>
+                <div class="content-sections">
+                    <div class="content-section">
+                        <h3 class="section-title"><span class="section-icon">📝</span>Resumo do Capítulo</h3>
+                        <div class="summary-text">
+                            <div class="placeholder-text">Aqui você adicionará o resumo do Capítulo 2.</div>
+                        </div>
+                    </div>
+                    <div class="content-section">
+                        <h3 class="section-title"><span class="section-icon">🎵</span>Áudio do Capítulo</h3>
+                        <div class="media-container">
+                            <audio controls>
+                                <source src="mídias/capitulo2.mp3" type="audio/mpeg">
+                                <source src="mídias/capitulo2.ogg" type="audio/ogg">
+                                Seu navegador não suporta o elemento de áudio.
+                            </audio>
+                        </div>
+                    </div>
+                    <div class="content-section">
+                        <h3 class="section-title"><span class="section-icon">🎬</span>Vídeo do Capítulo</h3>
+                        <div class="media-container">
+                            <video controls>
+                                <source src="mídias/capitulo2.mp4" type="video/mp4">
+                                <source src="mídias/capitulo2.webm" type="video/webm">
+                                Seu navegador não suporta o elemento de vídeo.
+                            </video>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Repeat similar structure for chapters 3-10 -->
+            <div class="chapter" id="chapter3">
+                <div class="chapter-header">
+                    <div class="chapter-number">Capítulo 3</div>
+                    <h2 class="chapter-title">Título do Capítulo 3</h2>
+                </div>
+                <div class="content-sections">
+                    <div class="content-section">
+                        <h3 class="section-title"><span class="section-icon">📝</span>Resumo do Capítulo</h3>
+                        <div class="summary-text">
+                            <div class="placeholder-text">Aqui você adicionará o resumo do Capítulo 3.</div>
+                        </div>
+                    </div>
+                    <div class="content-section">
+                        <h3 class="section-title"><span class="section-icon">🎵</span>Áudio do Capítulo</h3>
+                        <div class="media-container">
+                            <audio controls>
+                                <source src="mídias/capitulo3.mp3" type="audio/mpeg">
+                                <source src="mídias/capitulo3.ogg" type="audio/ogg">
+                                Seu navegador não suporta o elemento de áudio.
+                            </audio>
+                        </div>
+                    </div>
+                    <div class="content-section">
+                        <h3 class="section-title"><span class="section-icon">🎬</span>Vídeo do Capítulo</h3>
+                        <div class="media-container">
+                            <video controls>
+                                <source src="mídias/capitulo3.mp4" type="video/mp4">
+                                <source src="mídias/capitulo3.webm" type="video/webm">
+                                Seu navegador não suporta o elemento de vídeo.
+                            </video>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="chapter" id="chapter4">
+                <div class="chapter-header">
+                    <div class="chapter-number">Capítulo 4</div>
+                    <h2 class="chapter-title">Título do Capítulo 4</h2>
+                </div>
+                <div class="content-sections">
+                    <div class="content-section">
+                        <h3 class="section-title"><span class="section-icon">📝</span>Resumo do Capítulo</h3>
+                        <div class="summary-text">
+                            <div class="placeholder-text">Aqui você adicionará o resumo do Capítulo 4.</div>
+                        </div>
+                    </div>
+                    <div class="content-section">
+                        <h3 class="section-title"><span class="section-icon">🎵</span>Áudio do Capítulo</h3>
+                        <div class="media-container">
+                            <audio controls>
+                                <source src="mídias/capitulo4.mp3" type="audio/mpeg">
+                                <source src="mídias/capitulo4.ogg" type="audio/ogg">
+                                Seu navegador não suporta o elemento de áudio.
+                            </audio>
+                        </div>
+                    </div>
+                    <div class="content-section">
+                        <h3 class="section-title"><span class="section-icon">🎬</span>Vídeo do Capítulo</h3>
+                        <div class="media-container">
+                            <video controls>
+                                <source src="mídias/capitulo4.mp4" type="video/mp4">
+                                <source src="mídias/capitulo4.webm" type="video/webm">
+                                Seu navegador não suporta o elemento de vídeo.
+                            </video>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="chapter" id="chapter5">
+                <div class="chapter-header">
+                    <div class="chapter-number">Capítulo 5</div>
+                    <h2 class="chapter-title">Título do Capítulo 5</h2>
+                </div>
+                <div class="content-sections">
+                    <div class="content-section">
+                        <h3 class="section-title"><span class="section-icon">📝</span>Resumo do Capítulo</h3>
+                        <div class="summary-text">
+                            <div class="placeholder-text">Aqui você adicionará o resumo do Capítulo 5.</div>
+                        </div>
+                    </div>
+                    <div class="content-section">
+                        <h3 class="section-title"><span class="section-icon">🎵</span>Áudio do Capítulo</h3>
+                        <div class="media-container">
+                            <audio controls>
+                                <source src="mídias/capitulo5.mp3" type="audio/mpeg">
+                                <source src="mídias/capitulo5.ogg" type="audio/ogg">
+                                Seu navegador não suporta o elemento de áudio.
+                            </audio>
+                        </div>
+                    </div>
+                    <div class="content-section">
+                        <h3 class="section-title"><span class="section-icon">🎬</span>Vídeo do Capítulo</h3>
+                        <div class="media-container">
+                            <video controls>
+                                <source src="mídias/capitulo5.mp4" type="video/mp4">
+                                <source src="mídias/capitulo5.webm" type="video/webm">
+                                Seu navegador não suporta o elemento de vídeo.
+                            </video>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="chapter" id="chapter6">
+                <div class="chapter-header">
+                    <div class="chapter-number">Capítulo 6</div>
+                    <h2 class="chapter-title">Título do Capítulo 6</h2>
+                </div>
+                <div class="content-sections">
+                    <div class="content-section">
+                        <h3 class="section-title"><span class="section-icon">📝</span>Resumo do Capítulo</h3>
+                        <div class="summary-text">
+                            <div class="placeholder-text">Aqui você adicionará o resumo do Capítulo 6.</div>
+                        </div>
+                    </div>
+                    <div class="content-section">
+                        <h3 class="section-title"><span class="section-icon">🎵</span>Áudio do Capítulo</h3>
+                        <div class="media-container">
+                            <audio controls>
+                                <source src="mídias/capitulo6.mp3" type="audio/mpeg">
+                                <source src="mídias/capitulo6.ogg" type="audio/ogg">
+                                Seu navegador não suporta o elemento de áudio.
+                            </audio>
+                        </div>
+                    </div>
+                    <div class="content-section">
+                        <h3 class="section-title"><span class="section-icon">🎬</span>Vídeo do Capítulo</h3>
+                        <div class="media-container">
+                            <video controls>
+                                <source src="mídias/capitulo6.mp4" type="video/mp4">
+                                <source src="mídias/capitulo6.webm" type="video/webm">
+                                Seu navegador não suporta o elemento de vídeo.
+                            </video>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="chapter" id="chapter7">
+                <div class="chapter-header">
+                    <div class="chapter-number">Capítulo 7</div>
+                    <h2 class="chapter-title">Título do Capítulo 7</h2>
+                </div>
+                <div class="content-sections">
+                    <div class="content-section">
+                        <h3 class="section-title"><span class="section-icon">📝</span>Resumo do Capítulo</h3>
+                        <div class="summary-text">
+                            <div class="placeholder-text">Aqui você adicionará o resumo do Capítulo 7.</div>
+                        </div>
+                    </div>
+                    <div class="content-section">
+                        <h3 class="section-title"><span class="section-icon">🎵</span>Áudio do Capítulo</h3>
+                        <div class="media-container">
+                            <audio controls>
+                                <source src="mídias/capitulo7.mp3" type="audio/mpeg">
+                                <source src="mídias/capitulo7.ogg" type="audio/ogg">
+                                Seu navegador não suporta o elemento de áudio.
+                            </audio>
+                        </div>
+                    </div>
+                    <div class="content-section">
+                        <h3 class="section-title"><span class="section-icon">🎬</span>Vídeo do Capítulo</h3>
+                        <div class="media-container">
+                            <video controls>
+                                <source src="mídias/capitulo7.mp4" type="video/mp4">
+                                <source src="mídias/capitulo7.webm" type="video/webm">
+                                Seu navegador não suporta o elemento de vídeo.
+                            </video>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="chapter" id="chapter8">
+                <div class="chapter-header">
+                    <div class="chapter-number">Capítulo 8</div>
+                    <h2 class="chapter-title">Título do Capítulo 8</h2>
+                </div>
+                <div class="content-sections">
+                    <div class="content-section">
+                        <h3 class="section-title"><span class="section-icon">📝</span>Resumo do Capítulo</h3>
+                        <div class="summary-text">
+                            <div class="placeholder-text">Aqui você adicionará o resumo do Capítulo 8.</div>
+                        </div>
+                    </div>
+                    <div class="content-section">
+                        <h3 class="section-title"><span class="section-icon">🎵</span>Áudio do Capítulo</h3>
+                        <div class="media-container">
+                            <audio controls>
+                                <source src="mídias/capitulo8.mp3" type="audio/mpeg">
+                                <source src="mídias/capitulo8.ogg" type="audio/ogg">
+                                Seu navegador não suporta o elemento de áudio.
+                            </audio>
+                        </div>
+                    </div>
+                    <div class="content-section">
+                        <h3 class="section-title"><span class="section-icon">🎬</span>Vídeo do Capítulo</h3>
+                        <div class="media-container">
+                            <video controls>
+                                <source src="mídias/capitulo8.mp4" type="video/mp4">
+                                <source src="mídias/capitulo8.webm" type="video/webm">
+                                Seu navegador não suporta o elemento de vídeo.
+                            </video>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="chapter" id="chapter9">
+                <div class="chapter-header">
+                    <div class="chapter-number">Capítulo 9</div>
+                    <h2 class="chapter-title">Título do Capítulo 9</h2>
+                </div>
+                <div class="content-sections">
+                    <div class="content-section">
+                        <h3 class="section-title"><span class="section-icon">📝</span>Resumo do Capítulo</h3>
+                        <div class="summary-text">
+                            <div class="placeholder-text">Aqui você adicionará o resumo do Capítulo 9.</div>
+                        </div>
+                    </div>
+                    <div class="content-section">
+                        <h3 class="section-title"><span class="section-icon">🎵</span>Áudio do Capítulo</h3>
+                        <div class="media-container">
+                            <audio controls>
+                                <source src="mídias/capitulo9.mp3" type="audio/mpeg">
+                                <source src="mídias/capitulo9.ogg" type="audio/ogg">
+                                Seu navegador não suporta o elemento de áudio.
+                            </audio>
+                        </div>
+                    </div>
+                    <div class="content-section">
+                        <h3 class="section-title"><span class="section-icon">🎬</span>Vídeo do Capítulo</h3>
+                        <div class="media-container">
+                            <video controls>
+                                <source src="mídias/capitulo9.mp4" type="video/mp4">
+                                <source src="mídias/capitulo9.webm" type="video/webm">
+                                Seu navegador não suporta o elemento de vídeo.
+                            </video>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="chapter" id="chapter10">
+                <div class="chapter-header">
+                    <div class="chapter-number">Capítulo 10</div>
+                    <h2 class="chapter-title">Título do Capítulo 10</h2>
+                </div>
+                <div class="content-sections">
+                    <div class="content-section">
+                        <h3 class="section-title"><span class="section-icon">📝</span>Resumo do Capítulo</h3>
+                        <div class="summary-text">
+                            <div class="placeholder-text">Aqui você adicionará o resumo do Capítulo 10.</div>
+                        </div>
+                    </div>
+                    <div class="content-section">
+                        <h3 class="section-title"><span class="section-icon">🎵</span>Áudio do Capítulo</h3>
+                        <div class="media-container">
+                            <audio controls>
+                                <source src="mídias/capitulo10.mp3" type="audio/mpeg">
+                                <source src="mídias/capitulo10.ogg" type="audio/ogg">
+                                Seu navegador não suporta o elemento de áudio.
+                            </audio>
+                        </div>
+                    </div>
+                    <div class="content-section">
+                        <h3 class="section-title"><span class="section-icon">🎬</span>Vídeo do Capítulo</h3>
+                        <div class="media-container">
+                            <video controls>
+                                <source src="mídias/capitulo10.mp4" type="video/mp4">
+                                <source src="mídias/capitulo10.webm" type="video/webm">
+                                Seu navegador não suporta o elemento de vídeo.
+                            </video>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Back to Top Button -->
+    <button class="back-to-top" id="backToTop">↑</button>
+
+    <script>
+        // Navigation functionality
+        const navButtons = document.querySelectorAll('.nav-btn');
+        const chapters = document.querySelectorAll('.chapter');
+        const progressFill = document.getElementById('progressFill');
+        const progressText = document.getElementById('progressText');
+        const backToTopBtn = document.getElementById('backToTop');
+
+        // Chapter navigation
+        navButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                const chapterNum = button.getAttribute('data-chapter');
+                
+                // Remove active class from all buttons and chapters
+                navButtons.forEach(btn => btn.classList.remove('active'));
+                chapters.forEach(chapter => chapter.classList.remove('active'));
+                
+                // Add active class to clicked button and corresponding chapter
+                button.classList.add('active');
+                document.getElementById(`chapter${chapterNum}`).classList.add('active');
+                
+                // Update progress bar
+                const progress = (chapterNum / 10) * 100;
+                progressFill.style.width = `${progress}%`;
+                progressText.textContent = `Capítulo ${chapterNum} de 10`;
+                
+                // Scroll to top smoothly
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+                
+                // Pause all audio and video elements
+                pauseAllMedia();
+            });
+        });
+
+        // Function to pause all media
+        function pauseAllMedia() {
+            const allAudio = document.querySelectorAll('audio');
+            const allVideo = document.querySelectorAll('video');
+            
+            allAudio.forEach(audio => {
+                audio.pause();
+            });
+            
+            allVideo.forEach(video => {
+                video.pause();
+            });
+        }
+
+        // Back to top button functionality
+        window.addEventListener('scroll', () => {
+            if (window.pageYOffset > 300) {
+                backToTopBtn.classList.add('visible');
+            } else {
+                backToTopBtn.classList.remove('visible');
+            }
+        });
+
+        backToTopBtn.addEventListener('click', () => {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+
+        // Keyboard navigation
+        document.addEventListener('keydown', (e) => {
+            const activeButton = document.querySelector('.nav-btn.active');
+            const currentChapter = parseInt(activeButton.getAttribute('data-chapter'));
+            
+            if (e.key === 'ArrowLeft' && currentChapter > 1) {
+                document.querySelector(`[data-chapter="${currentChapter - 1}"]`).click();
+            } else if (e.key === 'ArrowRight' && currentChapter < 10) {
+                document.querySelector(`[data-chapter="${currentChapter + 1}"]`).click();
+            }
+        });
+
+        // Initialize progress bar
+        progressFill.style.width = '10%';
+        
+        // Add smooth transitions for media elements
+        document.addEventListener('DOMContentLoaded', () => {
+            const mediaElements = document.querySelectorAll('audio, video');
+            
+            mediaElements.forEach(media => {
+                media.addEventListener('loadstart', () => {
+                    media.style.opacity = '0.5';
+                });
+                
+                media.addEventListener('canplay', () => {
+                    media.style.opacity = '1';
+                });
+                
+                media.addEventListener('error', () => {
+                    const container = media.closest('.media-container');
+                    container.innerHTML = '<div class="placeholder-text">Mídia não encontrada. Verifique se o arquivo está na pasta "mídias".</div>';
+                });
+            });
+        });
+
+        // Add hover effects for better interactivity
+        const contentSections = document.querySelectorAll('.content-section');
+        
+        contentSections.forEach(section => {
+            section.addEventListener('mouseenter', () => {
+                section.style.transform = 'translateY(-2px)';
+                section.style.boxShadow = '0 8px 25px rgba(0,0,0,0.1)';
+            });
+            
+            section.addEventListener('mouseleave', () => {
+                section.style.transform = 'translateY(0)';
+                section.style.boxShadow = 'none';
+            });
+        });
+
+        // Auto-play functionality (optional - user can enable)
+        let autoPlayEnabled = false;
+        
+        function toggleAutoPlay() {
+            autoPlayEnabled = !autoPlayEnabled;
+            if (autoPlayEnabled) {
+                console.log('Auto-play habilitado');
+            } else {
+                console.log('Auto-play desabilitado');
+            }
+        }
+
+        // Add visual feedback for media loading
+        const allMediaElements = document.querySelectorAll('audio, video');
+        
+        allMediaElements.forEach(media => {
+            media.addEventListener('waiting', () => {
+                media.style.filter = 'blur(1px)';
+            });
+            
+            media.addEventListener('playing', () => {
+                media.style.filter = 'none';
+            });
+        });
+
+        // Add chapter completion tracking
+        let chapterProgress = {};
+        
+        function markChapterAsRead(chapterNum) {
+            chapterProgress[chapterNum] = true;
+            updateChapterButton(chapterNum);
+        }
+        
+        function updateChapterButton(chapterNum) {
+            const button = document.querySelector(`[data-chapter="${chapterNum}"]`);
+            if (chapterProgress[chapterNum]) {
+                button.style.background = 'rgba(76, 175, 80, 0.3)';
+                button.innerHTML = `✓ Capítulo ${chapterNum}`;
+            }
+        }
+
+        // Detect when user has scrolled through a chapter
+        function observeChapterReading() {
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        const chapterElement = entry.target;
+                        const chapterNum = chapterElement.id.replace('chapter', '');
+                        
+                        setTimeout(() => {
+                            if (entry.intersectionRatio > 0.8) {
+                                markChapterAsRead(chapterNum);
+                            }
+                        }, 3000); // Mark as read after 3 seconds of viewing
+                    }
+                });
+            }, { threshold: 0.8 });
+
+            chapters.forEach(chapter => {
+                observer.observe(chapter);
+            });
+        }
+
+        // Initialize chapter reading observer
+        observeChapterReading();
+
+        // Add print functionality
+        function printChapter(chapterNum) {
+            const chapter = document.getElementById(`chapter${chapterNum}`);
+            const printWindow = window.open('', '_blank');
+            printWindow.document.write(`
+                <html>
+                    <head>
+                        <title>Capítulo ${chapterNum} - Resumo do Livro</title>
+                        <style>
+                            body { font-family: Arial, sans-serif; margin: 40px; }
+                            .chapter-header { text-align: center; margin-bottom: 30px; }
+                            .content-section { margin-bottom: 30px; }
+                            .section-title { font-size: 1.2em; font-weight: bold; margin-bottom: 15px; }
+                            .placeholder-text { color: #666; font-style: italic; }
+                        </style>
+                    </head>
+                    <body>
+                        ${chapter.innerHTML.replace(/<audio.*?<\/audio>/g, '[Áudio não disponível na impressão]').replace(/<video.*?<\/video>/g, '[Vídeo não disponível na impressão]')}
+                    </body>
+                </html>
+            `);
+            printWindow.document.close();
+            printWindow.print();
+        }
+
+        console.log('📚 Página do resumo do livro carregada com sucesso!');
+        console.log('🎯 Use as setas do teclado (← →) para navegar entre capítulos');
+        console.log('📱 A página é totalmente responsiva e funciona em dispositivos móveis');
+        console.log('🔧 Para adicionar conteúdo, substitua os textos placeholder e adicione seus arquivos na pasta "mídias"');
+    </script>
+</body>
+</html>
