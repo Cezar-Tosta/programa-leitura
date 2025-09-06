@@ -150,69 +150,6 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 });
 
-// Chapter completion tracking
-let chapterProgress = {};
-
-function markChapterAsRead(chapterNum) {
-    chapterProgress[chapterNum] = true;
-    updateChapterButton(chapterNum);
-    saveProgress();
-}
-
-function updateChapterButton(chapterNum) {
-    const button = document.querySelector(`[data-chapter="${chapterNum}"]`);
-    if (chapterProgress[chapterNum]) {
-        button.style.background = 'rgba(76, 175, 80, 0.3)';
-        button.innerHTML = `✓ Capítulo ${chapterNum}`;
-    }
-}
-
-function saveProgress() {
-    try {
-        localStorage.setItem('bookProgress', JSON.stringify(chapterProgress));
-    } catch (error) {
-        console.log('LocalStorage não disponível, progresso não será salvo');
-    }
-}
-
-function loadProgress() {
-    try {
-        const saved = localStorage.getItem('bookProgress');
-        if (saved) {
-            chapterProgress = JSON.parse(saved);
-            Object.keys(chapterProgress).forEach(chapterNum => {
-                if (chapterProgress[chapterNum]) {
-                    updateChapterButton(chapterNum);
-                }
-            });
-        }
-    } catch (error) {
-        console.log('LocalStorage não disponível, progresso não foi carregado');
-    }
-}
-
-// Detect when user has scrolled through a chapter
-function observeChapterReading() {
-    const observer = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-            if (entry.isIntersecting) {
-                const chapterElement = entry.target;
-                const chapterNum = chapterElement.id.replace('chapter', '');
-                
-                setTimeout(() => {
-                    if (entry.intersectionRatio > 0.8) {
-                        markChapterAsRead(chapterNum);
-                    }
-                }, 3000); // Mark as read after 3 seconds of viewing
-            }
-        });
-    }, { threshold: 0.8 });
-
-    chapters.forEach(chapter => {
-        observer.observe(chapter);
-    });
-}
-
 // Print chapter functionality
 function printChapter(chapterNum) {
     const chapter = document.getElementById(`chapter${chapterNum}`);
@@ -295,9 +232,7 @@ document.addEventListener('touchend', (e) => {
 
 // Initialize everything
 document.addEventListener('DOMContentLoaded', () => {
-    observeChapterReading();
-    loadProgress();
-    
+   
     console.log('📚 Página do resumo do livro carregada com sucesso!');
     console.log('🎯 Use as setas do teclado (← →) para navegar entre capítulos');
     console.log('📱 A página é totalmente responsiva e funciona em dispositivos móveis');
@@ -309,8 +244,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
 // Expose functions globally for debugging
 window.bookApp = {
-    markChapterAsRead,
     printChapter,
-    searchContent,
-    chapterProgress
+    searchContent
 };
